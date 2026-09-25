@@ -1,121 +1,85 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@700;800;900&display=swap');
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { Menu, X } from 'lucide-react';
+import { portfolioData } from '../data/portfolio';
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+const Navbar = ({ activeSection }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 30);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
-html {
-  scroll-behavior: smooth;
-  scroll-padding-top: 80px;
-}
+  return (
+    <>
+      <nav
+        className={`hidden md:flex fixed top-0 left-0 right-0 z-40 items-center justify-between px-8 py-4 transition-all duration-300 ${
+          scrolled ? 'glass border-b border-accent-neon/20 shadow-[0_0_20px_rgba(0,255,136,0.08)]' : 'bg-transparent'
+        }`}
+      >
+        <motion.div
+          initial={{ opacity: 0, x: -24 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="text-2xl font-black font-display text-accent-neon glow-text px-3 py-2 rounded-lg border border-accent-neon/20"
+        >
+          {portfolioData.personal.initials}
+        </motion.div>
 
-body {
-  font-family: 'Inter', sans-serif;
-  background: linear-gradient(135deg, #0a0e27 0%, #0f1329 50%, #1a1f3a 100%);
-  color: #f5f5f5;
-  overflow-x: hidden;
-}
+        <div className="flex items-center gap-8">
+          {portfolioData.navigation.map((item, idx) => (
+            <motion.a
+              key={idx}
+              href={item.href}
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: idx * 0.08 }}
+              className={`text-sm font-medium tracking-[0.22em] uppercase transition-all ${
+                activeSection === item.href.slice(1)
+                  ? 'text-accent-neon glow-text'
+                  : 'text-text-secondary hover:text-accent-neon'
+              }`}
+            >
+              {item.label}
+            </motion.a>
+          ))}
+        </div>
+      </nav>
 
-/* Cursor styles */
-:root {
-  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="4" fill="%2300ff88" opacity="0.8"/><circle cx="16" cy="16" r="8" fill="none" stroke="%2300ff88" stroke-width="1" opacity="0.4"/></svg>') 16 16, auto;
-}
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="md:hidden fixed top-5 right-5 z-50 text-accent-neon bg-dark-900/60 backdrop-blur-md border border-accent-neon/20 rounded-full p-3"
+        aria-label="Toggle menu"
+      >
+        {isOpen ? <X size={22} /> : <Menu size={22} />}
+      </button>
 
-a, button {
-  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="6" fill="%2300ff88" opacity="0.9"/><circle cx="16" cy="16" r="12" fill="none" stroke="%2300d9ff" stroke-width="1.5" opacity="0.6"/></svg>') 16 16, pointer;
-}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: isOpen ? 1 : 0 }}
+        transition={{ duration: 0.2 }}
+        className={`md:hidden fixed inset-0 z-40 glass ${isOpen ? 'pointer-events-auto' : 'pointer-events-none'}`}
+      >
+        <div className="flex flex-col items-center justify-center h-full gap-8">
+          {portfolioData.navigation.map((item, idx) => (
+            <motion.a
+              key={idx}
+              href={item.href}
+              onClick={() => setIsOpen(false)}
+              initial={{ opacity: 0, y: 16 }}
+              animate={isOpen ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
+              transition={{ delay: idx * 0.08 }}
+              className="text-2xl font-display text-accent-neon glow-text tracking-[0.18em] uppercase"
+            >
+              {item.label}
+            </motion.a>
+          ))}
+        </div>
+      </motion.div>
+    </>
+  );
+};
 
-/* Selection color */
-::selection {
-  background-color: rgba(0, 255, 136, 0.3);
-  color: #f5f5f5;
-}
-
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(0, 255, 136, 0.3);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 255, 136, 0.6);
-}
-
-/* Smooth transitions */
-a, button {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Glowing text effect */
-.glow-text {
-  text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
-}
-
-.glow-text:hover {
-  text-shadow: 0 0 20px rgba(0, 255, 136, 0.8), 0 0 30px rgba(0, 217, 255, 0.4);
-}
-
-/* Glass effect */
-.glass {
-  background: rgba(15, 19, 41, 0.8);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(0, 255, 136, 0.1);
-}
-
-/* Magnetic button effect prep */
-button {
-  position: relative;
-}
-
-/* Neon glow */
-.neon-glow {
-  box-shadow: 0 0 20px rgba(0, 255, 136, 0.5), inset 0 0 20px rgba(0, 255, 136, 0.1);
-}
-
-.neon-glow:hover {
-  box-shadow: 0 0 40px rgba(0, 255, 136, 0.8), inset 0 0 20px rgba(0, 255, 136, 0.2);
-}
-
-/* Code snippet styling */
-code {
-  font-family: 'Courier New', monospace;
-  background: rgba(0, 255, 136, 0.05);
-  padding: 2px 6px;
-  border-radius: 3px;
-  color: #00ff88;
-}
-
-/* Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-}
-
-/* Accessibility */
-:focus-visible {
-  outline: 2px solid #00ff88;
-  outline-offset: 2px;
-}
-
-button:focus-visible,
-a:focus-visible {
-  outline: 2px solid #00ff88;
-  outline-offset: 2px;
-}
+export default Navbar;

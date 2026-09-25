@@ -1,106 +1,163 @@
-import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import gsap from 'gsap';
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700;800;900&display=swap');
 
-const Intro = ({ onComplete }) => {
-  const [skip, setSkip] = useState(false);
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-  useEffect(() => {
-    if (skip) {
-      onComplete();
-      return;
-    }
+:root {
+  --bg: #0a0e27;
+  --bg-2: #0f1329;
+  --primary: #f5f5f5;
+  --secondary: #a0a0a0;
+  --accent: #00ff88;
+  --cyan: #00d9ff;
+  --gold: #d4af37;
+}
 
-    const timeline = gsap.timeline({
-      onComplete: () => {
-        setTimeout(() => onComplete(), 800);
-      },
-    });
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-    // Particles animation
-    timeline.to('.intro-particle', {
-      opacity: 1,
-      y: -20,
-      duration: 0.8,
-      stagger: 0.1,
-    }, 0);
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 90px;
+}
 
-    // Grid fade
-    timeline.to('.intro-grid', {
-      opacity: 0.3,
-      duration: 1,
-    }, 0);
+body {
+  font-family: 'Inter', sans-serif;
+  background:
+    radial-gradient(circle at top, rgba(0, 255, 136, 0.08), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(0, 217, 255, 0.08), transparent 22%),
+    linear-gradient(135deg, #0a0e27 0%, #0f1329 48%, #171d36 100%);
+  color: var(--primary);
+  overflow-x: hidden;
+}
 
-    // Text reveal
-    timeline.to('.intro-text', {
-      opacity: 1,
-      y: 0,
-      duration: 1,
-    }, 0.3);
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(circle at center, black 30%, transparent 95%);
+  pointer-events: none;
+  z-index: 0;
+}
 
-    // Subtitle
-    timeline.to('.intro-subtitle', {
-      opacity: 1,
-      duration: 0.8,
-    }, 0.8);
+#root {
+  position: relative;
+  z-index: 1;
+}
 
-    // Closing animation
-    timeline.to('.intro-container', {
-      opacity: 0,
-      duration: 0.8,
-    }, 2.5);
-  }, [skip, onComplete]);
+:root {
+  cursor: none;
+}
 
-  return (
-    <motion.div
-      className="intro-container fixed inset-0 bg-dark-900 flex items-center justify-center z-50 overflow-hidden"
-      initial={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-    >
-      {/* Animated Grid Background */}
-      <div className="intro-grid absolute inset-0 opacity-0">
-        <div className="absolute inset-0" style={{
-          backgroundImage: 'linear-gradient(rgba(0, 255, 136, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 255, 136, 0.03) 1px, transparent 1px)',
-          backgroundSize: '50px 50px',
-        }} />
-      </div>
+html, body, a, button, input, textarea, select {
+  cursor: none;
+}
 
-      {/* Particles */}
-      <div className="absolute inset-0 overflow-hidden">
-        {[...Array(20)].map((_, i) => (
-          <div
-            key={i}
-            className="intro-particle absolute w-1 h-1 bg-accent-neon rounded-full opacity-0"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-          />
-        ))}
-      </div>
+::selection {
+  background: rgba(0, 255, 136, 0.25);
+  color: white;
+}
 
-      {/* Content */}
-      <div className="relative z-10 text-center">
-        <div className="intro-text opacity-0 translate-y-8">
-          <h1 className="text-6xl md:text-8xl font-bold font-display text-accent-neon mb-4">
-            MI.
-          </h1>
-          <p className="intro-subtitle opacity-0 text-xl md:text-2xl font-light text-text-secondary">
-            ENTERING MY WORLD...
-          </p>
-        </div>
-      </div>
+::-webkit-scrollbar {
+  width: 8px;
+}
 
-      {/* Skip Button */}
-      <button
-        onClick={() => setSkip(true)}
-        className="absolute bottom-8 right-8 px-6 py-2 text-sm font-medium text-accent-neon border border-accent-neon rounded hover:bg-accent-neon hover:text-dark-900 transition-all"
-        aria-label="Skip intro"
-      >
-        SKIP
-      </button>
-    </motion.div>
-  );
-};
+::-webkit-scrollbar-track {
+  background: transparent;
+}
 
-export default Intro;
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 255, 136, 0.35);
+  border-radius: 9999px;
+}
+
+.glass {
+  background: rgba(15, 19, 41, 0.72);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(0, 255, 136, 0.12);
+}
+
+.section-shell {
+  position: relative;
+  isolation: isolate;
+}
+
+.section-shell::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 255, 136, 0.02), transparent 40%);
+  z-index: -1;
+}
+
+.glow-text {
+  text-shadow: 0 0 18px rgba(0, 255, 136, 0.4);
+}
+
+.neon-glow {
+  box-shadow: 0 0 24px rgba(0, 255, 136, 0.35), inset 0 0 22px rgba(0, 255, 136, 0.08);
+}
+
+.custom-cursor {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 255, 136, 0.9);
+  background: rgba(0, 255, 136, 0.16);
+  box-shadow: 0 0 25px rgba(0, 255, 136, 0.75), 0 0 12px rgba(0, 217, 255, 0.5);
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+}
+
+.custom-cursor::after {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  border-radius: 50%;
+  background: rgba(0, 255, 136, 0.7);
+}
+
+@media (max-width: 768px) {
+  :root {
+    cursor: auto;
+  }
+
+  html, body, a, button, input, textarea, select {
+    cursor: auto;
+  }
+
+  .custom-cursor {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid rgba(0, 255, 136, 0.9);
+  outline-offset: 2px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid rgba(0, 255, 136, 0.9);
+  outline-offset: 2px;
+}
