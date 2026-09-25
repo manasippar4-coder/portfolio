@@ -1,85 +1,180 @@
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
-import { portfolioData } from '../data/portfolio';
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700;800;900&display=swap');
 
-const Navbar = ({ activeSection }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 30);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+:root {
+  --bg: #0a0e27;
+  --bg-2: #0f1329;
+  --primary: #f5f5f5;
+  --secondary: #a0a0a0;
+  --accent: #00ff88;
+  --cyan: #00d9ff;
+  --gold: #d4af37;
+  --gold-soft: rgba(212, 175, 55, 0.24);
+}
 
-  return (
-    <>
-      <nav
-        className={`hidden md:flex fixed top-0 left-0 right-0 z-40 items-center justify-between px-8 py-4 transition-all duration-300 ${
-          scrolled ? 'glass border-b border-accent-neon/20 shadow-[0_0_20px_rgba(0,255,136,0.08)]' : 'bg-transparent'
-        }`}
-      >
-        <motion.div
-          initial={{ opacity: 0, x: -24 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="text-2xl font-black font-display text-accent-neon glow-text px-3 py-2 rounded-lg border border-accent-neon/20"
-        >
-          {portfolioData.personal.initials}
-        </motion.div>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-        <div className="flex items-center gap-8">
-          {portfolioData.navigation.map((item, idx) => (
-            <motion.a
-              key={idx}
-              href={item.href}
-              initial={{ opacity: 0, y: -8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.08 }}
-              className={`text-sm font-medium tracking-[0.22em] uppercase transition-all ${
-                activeSection === item.href.slice(1)
-                  ? 'text-accent-neon glow-text'
-                  : 'text-text-secondary hover:text-accent-neon'
-              }`}
-            >
-              {item.label}
-            </motion.a>
-          ))}
-        </div>
-      </nav>
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 90px;
+}
 
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="md:hidden fixed top-5 right-5 z-50 text-accent-neon bg-dark-900/60 backdrop-blur-md border border-accent-neon/20 rounded-full p-3"
-        aria-label="Toggle menu"
-      >
-        {isOpen ? <X size={22} /> : <Menu size={22} />}
-      </button>
+body {
+  font-family: 'Inter', sans-serif;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(212, 175, 55, 0.12), transparent 18%),
+    radial-gradient(circle at 85% 12%, rgba(0, 255, 136, 0.12), transparent 20%),
+    radial-gradient(circle at 75% 78%, rgba(0, 217, 255, 0.08), transparent 28%),
+    linear-gradient(135deg, #070b17 0%, #0d1227 42%, #171d36 100%);
+  color: var(--primary);
+  overflow-x: hidden;
+}
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: isOpen ? 1 : 0 }}
-        transition={{ duration: 0.2 }}
-        className={`md:hidden fixed inset-0 z-40 glass ${isOpen ? 'pointer-events-auto' : 'pointer-events-none'}`}
-      >
-        <div className="flex flex-col items-center justify-center h-full gap-8">
-          {portfolioData.navigation.map((item, idx) => (
-            <motion.a
-              key={idx}
-              href={item.href}
-              onClick={() => setIsOpen(false)}
-              initial={{ opacity: 0, y: 16 }}
-              animate={isOpen ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
-              transition={{ delay: idx * 0.08 }}
-              className="text-2xl font-display text-accent-neon glow-text tracking-[0.18em] uppercase"
-            >
-              {item.label}
-            </motion.a>
-          ))}
-        </div>
-      </motion.div>
-    </>
-  );
-};
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 52px 52px;
+  mask-image: radial-gradient(circle at center, black 35%, transparent 95%);
+  pointer-events: none;
+  z-index: 0;
+}
 
-export default Navbar;
+#root {
+  position: relative;
+  z-index: 1;
+}
+
+:root {
+  cursor: none;
+}
+
+html, body, a, button, input, textarea, select {
+  cursor: none;
+}
+
+::selection {
+  background: rgba(0, 255, 136, 0.28);
+  color: white;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0.02);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(212,175,55,0.75), rgba(0,255,136,0.5));
+  border-radius: 9999px;
+}
+
+.glass {
+  background: rgba(15, 19, 41, 0.72);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(212, 175, 55, 0.16);
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.2);
+}
+
+.glow-text {
+  text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+}
+
+.gold-text {
+  text-shadow: 0 0 22px rgba(212, 175, 55, 0.35);
+}
+
+.neon-glow {
+  box-shadow: 0 0 30px rgba(0, 255, 136, 0.32), inset 0 0 22px rgba(0, 255, 136, 0.08);
+}
+
+.luxury-button {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(212,175,55,0.4);
+  background: linear-gradient(135deg, rgba(212,175,55,0.12), rgba(0,255,136,0.08));
+}
+
+.luxury-button::before {
+  content: '';
+  position: absolute;
+  inset: -120% 0 auto auto;
+  width: 50%;
+  height: 300%;
+  background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.25), transparent 70%);
+  transform: rotate(25deg);
+  opacity: 0.7;
+  transition: all 0.7s ease;
+}
+
+.luxury-button:hover::before {
+  left: 60%;
+}
+
+.custom-cursor {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid rgba(212,175,55,0.9);
+  background: rgba(212,175,55,0.14);
+  box-shadow: 0 0 24px rgba(212, 175, 55, 0.7), 0 0 12px rgba(0,255,136,0.5);
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+}
+
+.custom-cursor::after {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border-radius: 50%;
+  background: rgba(0,255,136,0.8);
+}
+
+@media (max-width: 768px) {
+  :root {
+    cursor: auto;
+  }
+
+  html, body, a, button, input, textarea, select {
+    cursor: auto;
+  }
+
+  .custom-cursor {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid rgba(0, 255, 136, 0.9);
+  outline-offset: 2px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid rgba(0, 255, 136, 0.9);
+  outline-offset: 2px;
+}
